@@ -53,7 +53,7 @@ if ($inputBox.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
 
 #Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.11.0-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='subdomain.25plrp.cz' WAZUH_AGENT_GROUP='default' WAZUH_AGENT_NAME='Test_Doma' 
 #Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.11.0-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='007.25plrp.cz' WAZUH_REGISTRATION_PASSWORD='' WAZUH_AGENT_GROUP='default' WAZUH_AGENT_NAME='test' 
-Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.11.0-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='008.25plrp.cz' WAZUH_REGISTRATION_SERVER='007.25plrp.cz' WAZUH_REGISTRATION_PORT='1515'  WAZUH_REGISTRATION_PASSWORD='$userInput' WAZUH_AGENT_GROUP='default' WAZUH_AGENT_NAME='test' 
+Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.11.0-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='localhost' WAZUH_REGISTRATION_SERVER='localhost' WAZUH_REGISTRATION_PORT='1515'  WAZUH_REGISTRATION_PASSWORD='$userInput' WAZUH_AGENT_GROUP='default' WAZUH_AGENT_NAME='test' 
 
 NET START WazuhSvc
 PAUSE
