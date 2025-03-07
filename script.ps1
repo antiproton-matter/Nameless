@@ -1,5 +1,5 @@
 winget install --id Cloudflare.cloudflared
-$cloudflarePath = $(Get-Command cloudflared.exe).Source # For the following service configs BinaryPathName
+$cloudflarePath = "C:\Program Files (x86)\cloudflared\cloudflared.exe" # For the following service configs BinaryPathName
 $agentRegistrationHostname = "007.25plrp.cz"
 $agentHostname = "008.25plrp.cz"
 $params = @{
