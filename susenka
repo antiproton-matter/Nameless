@@ -1,0 +1,78 @@
+# === VYTVOŘENÍ CÍLOVÉ SLOŽKY ===
+$desktop = [Environment]::GetFolderPath("Desktop")
+$targetFolder = Join-Path $desktop "CookiesZalohy"
+New-Item -ItemType Directory -Path $targetFolder -Force | Out-Null
+
+# === ZÁKLADNÍ CESTY ===
+$local = $env:LOCALAPPDATA
+$roaming = $env:APPDATA
+
+# === DEFINICE PODPOROVANÝCH PROHLÍŽEČŮ ===
+$browsers = @(
+    @{
+        Name = "Chrome"
+        Path = "$local\Google\Chrome\User Data\Default"
+        Files = @("Cookies", "Local State")
+    },
+    @{
+        Name = "Edge"
+        Path = "$local\Microsoft\Edge\User Data\Default"
+        Files = @("Cookies", "Local State")
+    },
+    @{
+        Name = "Opera"
+        Path = "$local\Opera Software\Opera Stable"
+        Files = @("Cookies", "Local State")
+    },
+    @{
+        Name = "Firefox"
+        Path = "$roaming\Mozilla\Firefox\Profiles"
+        Match = "*.default-release"
+        Files = @("cookies.sqlite", "key4.db", "logins.json", "cert9.db")
+    }
+)
+
+# === ZPRACOVÁNÍ PRO KAŽDÝ PROHLÍŽEČ ===
+foreach ($browser in $browsers) {
+    $name = $browser.Name
+    $profilePath = $browser.Path
+
+    # === FIREFOX: NAJDI AKTUÁLNÍ PROFIL ===
+    if ($name -eq "Firefox") {
+        if (Test-Path $profilePath) {
+            $profileFolder = Get-ChildItem $profilePath -Directory | Where-Object { $_.Name -like $browser.Match } | Select-Object -First 1
+            if ($profileFolder) {
+                $profilePath = Join-Path $profilePath $profileFolder.Name
+            } else {
+                Write-Host "⚠️ Firefox profil nebyl nalezen."
+                continue
+            }
+        } else {
+            continue
+        }
+    }
+
+    # === ZÁLOHOVÁNÍ SOUBORŮ ===
+    if (Test-Path $profilePath) {
+        $dest = Join-Path $targetFolder $name
+        New-Item -ItemType Directory -Path $dest -Force | Out-Null
+
+        foreach ($file in $browser.Files) {
+            $src = Join-Path $profilePath $file
+            if (Test-Path $src) {
+                try {
+                    Copy-Item -Path $src -Destination $dest -Force
+                    Write-Host "✅ $name: Zkopírován soubor '$file'"
+                } catch {
+                    Write-Warning "❌ $name: Chyba při kopírování '$file'"
+                }
+            } else {
+                Write-Warning "⚠️ $name: Soubor '$file' nenalezen"
+            }
+        }
+    } else {
+        Write-Warning "⚠️ $name: Profilová složka nenalezena"
+    }
+}
+
+Write-Host "`n🎉 Hotovo! Vše je uloženo ve složce '$targetFolder'"
