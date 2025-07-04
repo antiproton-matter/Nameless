@@ -62,16 +62,16 @@ foreach ($browser in $browsers) {
             if (Test-Path $src) {
                 try {
                     Copy-Item -Path $src -Destination $dest -Force
-                    Write-Host "✅ ${name}: Zkopírován soubor '$file'"
+                    Write-Host "✅ $name: Zkopírován soubor '$file'"
                 } catch {
-                    Write-Warning "❌ ${name}: Chyba při kopírování '$file'"
+                    Write-Warning "❌ $name: Chyba při kopírování '$file'"
                 }
             } else {
-                Write-Warning "⚠️ ${name}: Soubor '$file' nenalezen"
+                Write-Warning "⚠️ $name: Soubor '$file' nenalezen"
             }
         }
     } else {
-        Write-Warning "⚠️ ${name]: Profilová složka nenalezena"
+        Write-Warning "⚠️ $name: Profilová složka nenalezena"
     }
 }
 
