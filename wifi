@@ -19,7 +19,7 @@ foreach ($profile in $profiles) {
     if ($keyLine) {
         $password = ($keyLine -split ":")[1].Trim()
     } else {
-        $password = "Nenalezeno nebo není uloženo"
+        $password = "Nenalezeno nebo neni ulozeno"
     }
 
     $wifiList += "SSID: $ssid`nHeslo: $password`n--------------------------"
@@ -28,5 +28,4 @@ foreach ($profile in $profiles) {
 # Zápis do souboru na plochu
 $wifiList | Out-File -FilePath $outputFile -Encoding UTF8
 
-Write-Host "Hotovo! Výsledky jsou uložené v souboru: $outputFile"
-PAUSE
+Write-Host "Hotovo! Vysledky jsou ulozene v souboru: $outputFile"
