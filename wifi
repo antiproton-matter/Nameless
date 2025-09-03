@@ -31,7 +31,7 @@ foreach ($profile in $profiles) {
 }
 
 # Zápis do souboru na plochu
-$wifiList | Out-File -FilePath $outputFile -Encoding UTF8BOM
+$wifiList | Out-File -FilePath $outputFile -Encoding UTF8
 
 Write-Host "`nHotovo! Výsledky jsou uložené v souboru: $outputFile"
 
