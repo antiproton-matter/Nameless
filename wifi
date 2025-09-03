@@ -29,3 +29,5 @@ foreach ($profile in $profiles) {
 $wifiList | Out-File -FilePath $outputFile -Encoding UTF8
 
 Write-Host "Hotovo! Vysledky jsou ulozene v souboru: $outputFile"
+
+PAUSE
