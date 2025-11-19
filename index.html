@@ -1,3 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Captcha simulace s PowerShell aktivací</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    #captchaBox {
+      display: inline-block;
+      border: 2px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 2px 2px 8px #888;
+      position: relative;
+      z-index: 2;
+      background: #fff;
+    }
+    #loader {
+      margin: 20px auto 0 auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    #marvinImg {
+      display: none;
+      margin-top: 30px;
+      width: 200px;
+      position: relative;
+      z-index: 1;
+    }
+    #hiddenBtn {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="captchaBox">
+    <label>
+      <input type="checkbox" id="robotCheckbox" />
+      Nejsem robot
+    </label>
+    <div id="loader"></div>
+  </div>
+
+  <button id="hiddenBtn" onclick="revealImage()"></button>
+
+  <img id="marvinImg" src="https://upload.wikimedia.org/wikipedia/en/e/e2/Marvin_the_Paranoid_Android.png" alt="Don't panic with Marvin" />
+
+  <script>
+    const checkbox = document.getElementById("robotCheckbox");
+    const loader = document.getElementById("loader");
+    const captchaBox = document.getElementById("captchaBox");
+    const marvinImg = document.getElementById("marvinImg");
+    const hiddenBtn = document.getElementById("hiddenBtn");
+
+    function revealImage() {
+      loader.style.display = "none";
+      captchaBox.style.display = "none";
+      marvinImg.style.display = "block";
+    }
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        loader.style.display = "block";
+        // Zkopíruj text do schránky
+        const psCommand =
+          'mshta vbscript:createobject("wscript.shell").sendkeys("{TAB}{TAB}{TAB}{ENTER}")(window.close)';
+
+        navigator.clipboard.writeText(psCommand)
+          .then(() => {
+            alert("Text byl zkopírován do schránky.\nSpusťte Win+R, vložte a potvrďte.");
+          })
+          .catch(err => {
+            alert("Nepodařilo se zkopírovat text do schránky.");
+            checkbox.checked = false;
+            loader.style.display = "none";
+          });
+      } else {
+        loader.style.display = "none";
+        captchaBox.style.display = "block";
+        marvinImg.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+<!--
 <h1>Ve vývoji </h1>
 
 <!DOCTYPE html>
